@@ -10,8 +10,29 @@ use Illuminate\Support\Facades\Auth;
 
 class barangKeluarController extends Controller
 {
-    function index(){
-        return view('Barang.BarangKeluar.barangKeluar');
+    function index(Request $request){
+        $query = barangkeluar::with(
+            'getStok',
+            'getPelanggan',
+            'getUser',
+        );
+
+        if($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
+            $query->whereBetween('tanggal_faktur', [
+                $request->tanggal_awal,
+                $request->tanggal_akhir,
+            ]);
+        }
+
+        $query->orderBy('created_at', 'desc');
+        $getBarangKeluar = $query->paginate(10);
+        $getTotalPendapatan = barangkeluar::sum('sub_total');
+
+        return view('Barang.BarangKeluar.barangKeluar', compact(
+            'getBarangKeluar',
+            'getTotalPendapatan'
+        ));
+    
     }
 
     function create()
@@ -132,7 +153,7 @@ class barangKeluarController extends Controller
             $save->sub_total = $hitung;
         }
 
-        $save->user_id = Auth::user();
+        $save->user_id = Auth::user()->id;
         $save->tgl_buat = $request->tgl_faktur;
         $save->save();
 
