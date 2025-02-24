@@ -7,6 +7,7 @@ use App\Models\pelanggan;
 use App\Models\stok;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use PhpParser\Builder\Function_;
 
 class barangKeluarController extends Controller
 {
@@ -163,4 +164,15 @@ class barangKeluarController extends Controller
         );
     }
 
+    public function print($id)
+    {
+        $dataPrint = barangkeluar::with(
+            'getStok',
+            'getPelanggan'
+        )->find($id);
+
+        return view('Nota.nota', compact(
+            'dataPrint'
+        ));
+    }
 }

@@ -101,7 +101,7 @@ Route::controller(barangKeluarController::class)->group(function(){
 //     Route::post('/barang-keluar/edit/{id}','update');
 
 //     Route::get('/barang-keluar/{id}', 'destroy');
-
+    Route::get('/barang-keluar/print/{id}', 'print');
 
 
 });
