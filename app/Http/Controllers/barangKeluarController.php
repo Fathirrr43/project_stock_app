@@ -174,5 +174,28 @@ class barangKeluarController extends Controller
         return view('Nota.nota', compact(
             'dataPrint'
         ));
+
+    }
+
+
+    public function destroy($id)
+    {
+        $delete = barangkeluar::find($id);
+            $getID_Barang_Keluar = $delete->barang_id;
+            $getJumlah_barang_keluar = $delete->jumlah_beli;
+
+                $update = stok::find($getID_Barang_Keluar);
+                    $getStok = $update->stok;
+
+                    $jumlah_Baru = $getStok + $getJumlah_barang_keluar;
+                $update->stok = $jumlah_Baru;
+                $update->save();
+        $delete->delete();
+
+        return redirect()->back()->with(
+            'message',
+            'Data berhasil dihapus!!'
+        );
+
     }
 }
