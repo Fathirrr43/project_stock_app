@@ -19,21 +19,35 @@ class barangKeluarController extends Controller
         );
 
         if($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
-            $query->whereBetween('tanggal_faktur', [
+            $query->whereBetween('tgl_faktur', [
                 $request->tanggal_awal,
                 $request->tanggal_akhir,
             ]);
         }
 
+        
         $query->orderBy('created_at', 'desc');
         $getBarangKeluar = $query->paginate(10);
         $getTotalPendapatan = barangkeluar::sum('sub_total');
-
+        
         return view('Barang.BarangKeluar.barangKeluar', compact(
             'getBarangKeluar',
             'getTotalPendapatan'
         ));
+        
+        // {
+        // Ambil query pencarian jika ada
+        //     $search = $request->input('search');
+            
+        // Cari pelanggan berdasarkan nama atau nomor telepon
+        //     $pelanggan = Pelanggan::when($search, function ($query, $search) {
+        //         return $query->where('nama_pelanggan', 'like', '%' . $search . '%')
+        //                      ->orWhere('telp', 'like', '%' . $search . '%');
+        //     })
+        //     ->get();
     
+        //     return view('barangkeluar.index', compact('pelanggan'));
+        // }
     }
 
     function create()
